@@ -10,19 +10,24 @@ public class MeanFilterSerial {
    public static void main(String[] args) throws IOException {
       //Handling terminal inputs
       String path = args[0];
-      String output = args[1];
+      String out = args[1];
       int filter = Integer.parseInt(args[2]);
+      
       //Reading in the imgage
       File f = new File(path);
       BufferedImage img = ImageIO.read(f);
+      
       //Getting the image's sizes
       int height = img.getHeight();
       int width = img.getWidth();
+      
       int[][] processed = new int[width][height];
       BufferedImage outputImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+      
       //Creating the blocks
       int radius = (int) ((filter - 1) / 2);
       int blocks = (filter * filter);
+      
       //Getting processing time
       long currentTime = System.currentTimeMillis();
       for (int x = 0; x < width; x++) {
@@ -34,6 +39,7 @@ public class MeanFilterSerial {
             int green = 0;
             int blue = 0;
             int alpha = 0;
+            
             //Processing the block
             for (int i = startX; i < startX + filter; i++) {
                for (int j = startY; j < startY + filter; j++) {
@@ -50,6 +56,8 @@ public class MeanFilterSerial {
             int g = (int) (green / blocks);
             int b = (int) (blue / blocks);
             int a = (int) (alpha / blocks);
+
+            //Setting the processed pixels
             int rgb = (a << 24) | (r << 16) | (g << 8) | b;
             processed[x][y] = rgb;
             outputImage.setRGB(x, y, rgb);
@@ -57,5 +65,7 @@ public class MeanFilterSerial {
          }
          long lapsed = System.currentTimeMillis() - currentTime;
          System.out.println(lapsed);
+         File outputFile = new File(out);
+         ImageIO.write(outputImage, "jpg", outputFile);
    }
 }
