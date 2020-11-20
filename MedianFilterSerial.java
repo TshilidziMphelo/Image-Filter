@@ -56,6 +56,22 @@ public class MedianFilterSerial{
                     }
                 }
             }
+            //Sorting the arraylists
+            Collections.sort(red);
+            Collections.sort(green);
+            Collections.sort(blue);
+            Collections.sort(alpha);
+            
+            //Finding the median index on the arraylists
+            int r = red.get(red.size() / 2);
+            int g = green.get(green.size() / 2);
+            int b = blue.get(blue.size() / 2);
+            int a = alpha.get(alpha.size() / 2);
+           
+            //Setting the pixels to the median
+            int rgb = (a << 24) | (r << 16) | (g << 8) | b;
+            outputImage.setRGB(x, y, rgb);
+
 
           }
       }
