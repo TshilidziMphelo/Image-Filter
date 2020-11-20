@@ -64,7 +64,7 @@ public class MeanFilterSerial {
             }
          }
          long lapsed = System.currentTimeMillis() - currentTime;
-         System.out.println(lapsed);
+         System.out.println("The mean filter took " + lapsed + " milliseconds when a " + filter + "x" + filter + " was used.");
          File outputFile = new File(out);
          ImageIO.write(outputImage, "jpg", outputFile);
    }
