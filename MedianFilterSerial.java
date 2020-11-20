@@ -60,20 +60,25 @@ public class MedianFilterSerial{
             Collections.sort(red);
             Collections.sort(green);
             Collections.sort(blue);
-            Collections.sort(alpha);
-            
+            Collections.sort(alpha);           
+             
             //Finding the median index on the arraylists
             int r = red.get(red.size() / 2);
             int g = green.get(green.size() / 2);
             int b = blue.get(blue.size() / 2);
             int a = alpha.get(alpha.size() / 2);
-           
+                        
             //Setting the pixels to the median
             int rgb = (a << 24) | (r << 16) | (g << 8) | b;
             outputImage.setRGB(x, y, rgb);
-
-
-          }
+            }
       }
+      //Calculating the processing time
+      long lapsed = System.currentTimeMillis() - currentTime;
+
+      //Writing out the filtered image
+      System.out.println("The median filter took " + lapsed + " milliseconds when a " + filter +"x" + filter + " was used.");
+      File outputFile = new File(out);
+      ImageIO.write(outputImage, "jpg", outputFile);
    }
 }
