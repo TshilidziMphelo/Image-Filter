@@ -1,8 +1,8 @@
 /* Tshilidzi Mphelo
- * 20/11/2020
+ * 21/11/2020
  * Image Filtering
  */
- 
+
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -58,14 +58,14 @@ public class MeanFilterParallel {
                     int blue = 0;
                     int alpha = 0;
                     
-                    //For processing the blocks
+                    //For processing the surrounding pixels
                     for (int i = startX; i < startX + filter; i++) {
                         for (int j = startY; j < startY + filter; j++) {
 
                             if (!(i < 0 || i >= width || j < 0 || j >= height)) {
-
+         
                                 int px = rgbArray[j][i];
-
+                                                                  //adding the colours of each pixel to a total for calculating the average of the block
                                 red += (px >> 16) & 0xff;
                                 green += (px >> 8) & 0xff;
                                 blue += px & 0xff;
@@ -75,7 +75,7 @@ public class MeanFilterParallel {
                         }
                     }
                     
-                    //Seting the rgbs
+                    //Seting the rgbs to the average values inside the blocks
                     int r = (int) (red / blocks);
                     int g = (int) (green / blocks);
                     int b = (int) (blue / blocks);
@@ -207,7 +207,7 @@ public class MeanFilterParallel {
         File output = new File(out);
         BufferedImage outImage = new BufferedImage(xLength, yLength, BufferedImage.TYPE_INT_RGB);
 
-        // Set every pixel in place
+        // Setting the new filtered pixels matrix to the output image
         for (int x = 0; x < xLength; x++) {
             for (int y = 0; y < yLength; y++) {
                 int rgb = pixels[y][x];

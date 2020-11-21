@@ -44,7 +44,10 @@ public class MeanFilterSerial {
             for (int i = startX; i < startX + filter; i++) {
                for (int j = startY; j < startY + filter; j++) {
                   if (!(i < 0 || i >= width || j < 0 || j >= height)) {
+                  
                      int px = img.getRGB(i, j);
+                                                         //adding the colours of each pixel to a total for calculating the average of the block
+
                      red += (px >> 16) & 0xff;
                      green += (px >> 8) & 0xff;
                      blue += px & 0xff;
@@ -52,6 +55,7 @@ public class MeanFilterSerial {
                      }
                }
             }
+            //Calculating the averages
             int r = (int) (red / blocks);
             int g = (int) (green / blocks);
             int b = (int) (blue / blocks);
@@ -66,6 +70,8 @@ public class MeanFilterSerial {
          //Calculating the time spent processing
          long lapsed = System.currentTimeMillis() - currentTime;
          System.out.println("The mean filter took " + lapsed + " milliseconds when a " + filter + "x" + filter + " was used.");
+         
+         //Writing out the filtered image
          File outputFile = new File(out);
          ImageIO.write(outputImage, "jpg", outputFile);
    }

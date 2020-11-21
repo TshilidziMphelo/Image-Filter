@@ -48,7 +48,9 @@ public class MedianFilterSerial{
             for (int i = startX; i < startX + filter; i++) {
                 for (int j = startY; j < startY + filter; j++) {
                     if (!(i < 0 || i >= width || j < 0 || j >= height)) {
+                    
                         int px = img.getRGB(i, j);
+                                                         //adding the colours of each pixel into the arraylists
                         red.add((px >> 16) & 0xff);
                         green.add((px >> 8) & 0xff);
                         blue.add(px & 0xff);
