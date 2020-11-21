@@ -113,14 +113,14 @@ public class MedianFilterParallel {
 
          //Recursively dividing the image
          if ((xHigh - xLow) * (yHigh - yLow) <= THRESHOLD) {
-             return meanFilter();
+             return medianFilter();
          } else {
 
              if (splitLength) {
 
                  int mid = xLow + (xHigh - xLow) / 2; //Split the image from the midpoint
-                 MeanFilter left = new MeanFilter(xLow, yLow, mid, yHigh, filter, rgbArray, !splitLength); //The left part of the image
-                 MeanFilter right = new MeanFilter(mid, yLow, xHigh, yHigh, filter, rgbArray, !splitLength); //The right part of the image
+                 MedianFilter left = new MedianFilter(xLow, yLow, mid, yHigh, filter, rgbArray, !splitLength); //The left part of the image
+                 MedianFilter right = new MedianFilter(mid, yLow, xHigh, yHigh, filter, rgbArray, !splitLength); //The right part of the image
                  left.fork(); //Running the left thread
                  Integer[][] rightSection = right.compute();//Running the right thread on the main thread
                  Integer[][] leftSection = left.join(); //Main thread should wait for the left thread to complete
@@ -130,8 +130,8 @@ public class MedianFilterParallel {
              } else {
                  //Diving the image by its height
                  int mid = yLow + (yHigh - yLow) / 2;
-                 MeanFilter top = new MeanFilter(xLow, yLow, xHigh, mid, filter, rgbArray, !splitLength);
-                 MeanFilter bottom = new MeanFilter(xLow, mid, xHigh, yHigh, filter, rgbArray, !splitLength);
+                 MedianFilter top = new MedianFilter(xLow, yLow, xHigh, mid, filter, rgbArray, !splitLength);
+                 MedianFilter bottom = new MedianFilter(xLow, mid, xHigh, yHigh, filter, rgbArray, !splitLength);
                  top.fork();
                  Integer[][] rightSection = bottom.compute();
                  Integer[][] leftSection = top.join();
@@ -207,7 +207,7 @@ public class MedianFilterParallel {
         }
 
         //Creating a thread object
-        MeanFilter meanFilter = new MeanFilter(0, 0, xLength, yLength, Integer.parseInt(args[2]), rgbArray, true);
+        MedianFilter medianFilter = new MedianFilter(0, 0, xLength, yLength, Integer.parseInt(args[2]), rgbArray, true);
 
         // Create the Thread Pool
         int noOfThreads = Runtime.getRuntime().availableProcessors();
@@ -238,5 +238,4 @@ public class MedianFilterParallel {
 
  
 
-   }
 }
