@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveTask;
+import javax.imageio.ImageIO;
 
 public class MedianFilterParallel {
    static class MedianFilter extends RecursiveTask<Integer[][]> {         
@@ -216,7 +217,7 @@ public class MedianFilterParallel {
         System.out.println("Performing the mean filter ...");
         
         long t1 = System.currentTimeMillis();
-        Integer[][] pixels = forkJoinPool.invoke(meanFilter); //invoking the thread pool
+        Integer[][] pixels = forkJoinPool.invoke(medianFilter); //invoking the thread pool
         long lapsed = System.currentTimeMillis() - t1; //Calculating the processing time
 
         //Writing the filtered image
