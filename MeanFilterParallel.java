@@ -90,9 +90,85 @@ public class MeanFilterParallel {
 
             return pixels;
         }
+        
+        @Override
+        protected Integer[][] compute() { //Overriding compute
+
+            //Recursively dividing the image
+            if ((xHigh - xLow) * (yHigh - yLow) <= THRESHOLD) {
+                return meanFilter();
+            } else {
+
+                if (splitLength) {
+
+                    int mid = xLow + (xHigh - xLow) / 2; //Split the image from the midpoint
+                    MeanFilter left = new MeanFilter(xLow, yLow, mid, yHigh, filter, rgbArray, !splitLength); //The left part of the image
+                    MeanFilter right = new MeanFilter(mid, yLow, xHigh, yHigh, filter, rgbArray, !splitLength); //The right part of the image
+                    left.fork(); //Running the left thread
+                    Integer[][] rightSection = right.compute();//Running the right thread on the main thread
+                    Integer[][] leftSection = left.join(); //Main thread should wait for the left thread to complete
+
+                    return merge(leftSection, rightSection, splitLength); //Meging the left and right image into one
+
+                } else {
+                    //Diving the image by its height
+                    int mid = yLow + (yHigh - yLow) / 2;
+                    MeanFilter top = new MeanFilter(xLow, yLow, xHigh, mid, filter, rgbArray, !splitLength);
+                    MeanFilter bottom = new MeanFilter(xLow, mid, xHigh, yHigh, filter, rgbArray, !splitLength);
+                    top.fork();
+                    Integer[][] rightSection = bottom.compute();
+                    Integer[][] leftSection = top.join();
+
+                    return merge(leftSection, rightSection, splitLength);
+                }
+            }
+
+        }
+    }
+
+    //Combines two matrices into one
+    private static Integer[][] merge(Integer[][] sectionA, Integer[][] sectionB, boolean splitLength) {
+
+        if (splitLength) { //Finding out whether its horizontal or vertical
+
+            Integer[][] res = new Integer[sectionA.length][sectionA[0].length + sectionB[0].length];
+
+            for (int i = 0; i < res.length; i++) {
+                int index = 0;
+
+                for (int a : sectionA[i]) {
+                    res[i][index] = a;
+                    index++;
+                }
+
+                for (int b : sectionB[i]) {
+                    res[i][index] = b;
+                    index++;
+                }
+            }
+
+            return res;
+        } else {
+            int h = sectionA.length + sectionB.length;
+            Integer[][] res = new Integer[h][sectionA.length];
+
+            int index = 0;
+
+            for (Integer[] a : sectionA) {
+                res[index] = a;
+                index++;
+            }
+
+            for (Integer[] b : sectionB) {
+                res[index] = b;
+                index++;
+            }
+
+            return res;
 
         }
 
-    }
+   }
 
 }
+
