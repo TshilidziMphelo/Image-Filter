@@ -169,6 +169,56 @@ public class MeanFilterParallel {
         }
 
    }
+   
+   public static void main(String args[]) throws IOException {
+
+        //Handling terminal input
+        String path = args[0];
+        String out = args[1];
+        int filter = Integer.parseInt(args[2]);
+        
+        //Reading in the image and getting its sizes
+        BufferedImage img = ImageIO.read(new File(path));
+        int xLength = img.getWidth();
+        int yLength = img.getHeight();
+        int[][] rgbArray = new int[yLength][xLength];
+
+        //Setting the RGBs from the image onto a matrix
+        for (int y = 0; y < yLength; y++) {
+            for (int x = 0; x < xLength; x++) {
+                rgbArray[y][x] = img.getRGB(x, y);
+            }
+        }
+
+        //Creating a thread object
+        MeanFilter meanFilter = new MeanFilter(0, 0, xLength, yLength, Integer.parseInt(args[2]), rgbArray, true);
+
+        // Create the Thread Pool
+        int noOfThreads = Runtime.getRuntime().availableProcessors();
+        ForkJoinPool forkJoinPool = new ForkJoinPool(noOfThreads);
+
+        System.out.println("Performing the mean filter ...");
+        
+        long t1 = System.currentTimeMillis();
+        Integer[][] pixels = forkJoinPool.invoke(meanFilter); //invoking the thread pool
+        long lapsed = System.currentTimeMillis() - t1; //Calculating the processing time
+
+        //Writing the filtered image
+        File output = new File(out);
+        BufferedImage outImage = new BufferedImage(xLength, yLength, BufferedImage.TYPE_INT_RGB);
+
+        // Set every pixel in place
+        for (int x = 0; x < xLength; x++) {
+            for (int y = 0; y < yLength; y++) {
+                int rgb = pixels[y][x];
+                outImage.setRGB(x, y, rgb);
+            }
+        }
+
+        ImageIO.write(outImage, "jpg", output);
+        System.out.println("The mean filter took " + lapsed + " milliseconds to complete.");
+
+    }
 
 }
 
