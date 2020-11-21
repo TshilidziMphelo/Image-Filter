@@ -63,6 +63,7 @@ public class MeanFilterSerial {
             outputImage.setRGB(x, y, rgb);
             }
          }
+         //Calculating the time spent processing
          long lapsed = System.currentTimeMillis() - currentTime;
          System.out.println("The mean filter took " + lapsed + " milliseconds when a " + filter + "x" + filter + " was used.");
          File outputFile = new File(out);
