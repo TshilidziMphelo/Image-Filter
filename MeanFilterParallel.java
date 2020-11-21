@@ -131,8 +131,8 @@ public class MeanFilterParallel {
 
         if (splitLength) { //Finding out whether its horizontal or vertical
 
-            Integer[][] res = new Integer[sectionA.length][sectionA[0].length + sectionB[0].length];
-
+            Integer[][] res = new Integer[sectionA.length][sectionA[0].length + sectionB[0].length];  //the combined array with its size made by adding up those of the 
+                                                                                                      //arrays they're made off
             for (int i = 0; i < res.length; i++) {
                 int index = 0;
 
